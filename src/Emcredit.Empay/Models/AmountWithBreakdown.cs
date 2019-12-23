@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Emcredit.Empay.Models
 {
-    [Serializable]
     public class AmountWithBreakdown
     {
         //public AmountBreakdown Breakdown { get; set; }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Emcredit.Empay;
 using Emcredit.Empay.Models;
+using Emcredit.Empay.Models.Authorization;
+using Emcredit.Empay.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Web.Interfaces;
 using Microsoft.eShopWeb.Web.Pages.Basket;
-using Microsoft.eShopWeb.Web.ViewModels.Payment;
+using Microsoft.Extensions.Configuration;
 
 namespace Web.Controllers.Api
 {
@@ -17,13 +18,17 @@ namespace Web.Controllers.Api
     public class PaymentController : ControllerBase
     {
         private readonly IBasketViewModelService _basketViewModelService;
+        private readonly IConfiguration _config;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private string _username = null;
 
-        public PaymentController(SignInManager<ApplicationUser> signInManager, IBasketViewModelService basketViewModelService)
+        public PaymentController(SignInManager<ApplicationUser> signInManager,
+            IBasketViewModelService basketViewModelService,
+            IConfiguration config)
         {
             _signInManager = signInManager;
             _basketViewModelService = basketViewModelService;
+            _config = config;
         }
 
         public BasketViewModel BasketModel { get; set; } = new BasketViewModel();
@@ -32,26 +37,42 @@ namespace Web.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> CreateEmpayOrderAsync()
         {
-            await SetBasketModelAsync();
-
-            var orderRequest = new OrderRequest
+            try
             {
-                Intent = "CAPTURE",
-                PurchaseUnits = new System.Collections.Generic.List<PurchaseUnitRequest>()
-            };
+                await SetBasketModelAsync();
 
-            orderRequest.PurchaseUnits.Add(new PurchaseUnitRequest
+                var orderRequest = new OrderRequest()
+                {
+                    Payee = new OrderRequestPayee
+                    {
+                        BillerId = "123456",
+                        DisplayName = "eShop"
+                    }
+                };
+
+                orderRequest.PurchaseUnits.Add(new OrderRequestPurchaseUnit
+                {
+                    CustomId = "123456",
+                    InvoiceId = "123456",
+                    Amount = new AmountWithBreakdown { CurrencyCode = "AED", Value = BasketModel.Total().ToString() }
+                });
+
+                // GET Empay API configuration from appsettings.json
+                var empayApiEndpoint = new ApiEndpoint();
+                _config.Bind("Empay", empayApiEndpoint);
+
+                var orderService = new Emcredit.Empay.OrdersService();
+
+                var result = await orderService.CreateOrderAsync(new CreateOrderInput { Request = orderRequest, EmpayApiEndpoint = empayApiEndpoint })
+                    .ConfigureAwait(false);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                CustomId = "123456",
-                InvoiceId = "123456",
-                Amount = new AmountWithBreakdown { CurrencyCode = "AED", Value = BasketModel.Total().ToString() }
-            });
-
-            var orderService = new Emcredit.Empay.OrdersService();
-
-            var result = await orderService.CreateOrderAsync(orderRequest);
-
-            return Ok(result);
+                // TODO: Handle create order error
+                throw;
+            }
         }
 
         private void GetOrSetBasketCookieAndUserName()
