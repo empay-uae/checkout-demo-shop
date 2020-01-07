@@ -14,7 +14,7 @@ namespace Emcredit.Empay
     {
         public async Task<Order> CreateOrderAsync(CreateOrderInput input)
         {
-            return await $"{input.EmpayApiEndpoint.Uri}/checkout/v1/orders"
+            return await $"{input.EmpayApiEndpoint.Uri}/ordering/v1/orders"
                 .WithOAuthBearerToken(await GetApiAccessTokenAsync(new GetApiAccessTokenInput
                 {
                     ApiEndpoint = input.EmpayApiEndpoint,
