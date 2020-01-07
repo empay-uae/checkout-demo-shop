@@ -89,6 +89,13 @@
                     // Sandbox
                     var baseUrl = "/checkout/shop/";
 
+                    function handleErrors(response) {
+                        if (!response.ok) {
+                            throw Error(response.statusText);
+                        }
+                        return response;
+                    }
+
                     empay
                         .Buttons({
 
@@ -98,12 +105,16 @@
                                     headers: {
                                         'content-type': 'application/json'
                                     }
-                                }).then(function (res) {
-                                    console.log(res);
-                                    return res.json();
-                                }).then(function (data) {
-                                    return data.id;
-                                });
+                                })
+                                    .then(handleErrors)
+                                    .then(function (res) {
+                                        console.log(res);
+                                        return res.json();
+                                    }).then(function (data) {
+                                        return data.id;
+                                    }).catch(function (error) {
+                                        console.log(error);
+                                    });;
 
                             },
                             onApprove: function (data, actions) {
@@ -118,7 +129,7 @@
                             },
                             // TODO: Toggle based on environment
                             env: "sandbox"
-                            // env: "dev"
+                            //env: "local"
                         })
                         .render("#empay-button");
                 </script>
