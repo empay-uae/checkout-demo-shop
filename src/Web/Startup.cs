@@ -77,10 +77,9 @@ namespace Microsoft.eShopWeb.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -116,17 +115,6 @@ namespace Microsoft.eShopWeb.Web
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-            //// use real database
-            //// Requires LocalDB which can be installed with SQL Server Express 2016
-            //// https://www.microsoft.com/en-us/download/details.aspx?id=54284
-            //services.AddDbContext<CatalogContext>(c =>
-            //    c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection")));
-
-            //// Add Identity DbContext
-            //services.AddDbContext<AppIdentityDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
-
-            //ConfigureServices(services);
             ConfigureInMemoryDatabases(services);
         }
 
@@ -192,6 +180,12 @@ namespace Microsoft.eShopWeb.Web
             });
 
             _services = services; // used to debug registered services
+        }
+
+        public void ConfigureTestServices(IServiceCollection services)
+        {
+            // use in-memory database
+            ConfigureInMemoryDatabases(services);
         }
 
         private static void ConfigureCookieSettings(IServiceCollection services)
