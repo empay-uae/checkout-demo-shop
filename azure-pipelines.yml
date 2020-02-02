@@ -15,3 +15,17 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: "Publish"
+  inputs:
+    command: "publish"
+    publishWebProjects: true
+    arguments: "--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+
+- task: PublishBuildArtifacts@1
+  displayName: "Upload Artifacts"
+  inputs:
+    PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+    ArtifactName: "shop"
+    publishLocation: "Container"
