@@ -260,3 +260,6 @@ pub/
 \.vscode/
 /src/Emcredit.Empay/Services/PaymentService.cs
 /src/Emcredit.Empay/Services/IPaymentService.cs
+src/Web/appsettings.Sandbox.json
+src/Web/appsettings.Test.json
+src/Web/appsettings.Development.json
