@@ -1,4 +1,4 @@
-﻿namespace Emcredit.Empay.ApiScopes
+﻿namespace Emcredit.Empay.Authorization
 {
     public static class AppPermissions
     {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Emcredit.Empay.Models
+namespace Emcredit.Empay.Models.Orders
 {
     [Serializable]
-    public class Order
+    public class CreateOrderRequestResult
     {
         public string Id { get; set; }
         public List<LinkDto> Links { get; set; }

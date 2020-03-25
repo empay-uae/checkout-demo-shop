@@ -9,19 +9,17 @@ namespace Emcredit.Empay.Models.Orders
         public OrderRequest()
         {
             Intent = "CAPTURE";
+            Channel = "WEB_CHECKOUT";
             PurchaseUnits = new List<OrderRequestPurchaseUnit>();
         }
+
+        [Required]
+        public string Channel { get; set; }
 
         [Required]
         public string Intent { get; set; }
 
         [Required]
-        public OrderRequestPayee Payee { get; set; }
-
-        public OrderRequestPayer Payer { get; set; }
-
-        [Required]
-        [JsonProperty(PropertyName = "purchase_units")]
         public ICollection<OrderRequestPurchaseUnit> PurchaseUnits { get; set; }
     }
 }

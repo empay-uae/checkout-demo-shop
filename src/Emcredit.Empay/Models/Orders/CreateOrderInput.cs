@@ -1,10 +1,8 @@
-﻿using Emcredit.Empay.Models.Authorization;
-
-namespace Emcredit.Empay.Models.Orders
+﻿namespace Emcredit.Empay.Models.Orders
 {
     public class CreateOrderInput
     {
-        public ApiEndpoint EmpayApiEndpoint { get; set; }
+        public EmpaySettings EmpaySettings { get; set; }
         public OrderRequest Request { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Emcredit.Empay.Models;
+﻿using Emcredit.Empay.Authorization;
 using Emcredit.Empay.Models.Authorization;
 using Emcredit.Empay.Models.Orders;
 using Emcredit.Empay.Services;
@@ -12,16 +12,16 @@ namespace Emcredit.Empay
 {
     public class OrdersService : IOrdersService
     {
-        public async Task<Order> CreateOrderAsync(CreateOrderInput input)
+        public async Task<CreateOrderRequestResult> CreateOrderAsync(CreateOrderInput input)
         {
-            return await $"{input.EmpayApiEndpoint.Uri}/ordering/v1/orders"
+            return await $"{input.EmpaySettings.ApiEndpointUrl}/ordering/v1/orders"
                 .WithOAuthBearerToken(await GetApiAccessTokenAsync(new GetApiAccessTokenInput
                 {
-                    ApiEndpoint = input.EmpayApiEndpoint,
-                    Scope = ApiScopes.AppPermissions.Orders_Create
+                    EmpaySettings = input.EmpaySettings,
+                    Scope = AppPermissions.Orders_Create
                 }).ConfigureAwait(false))
                 .PostJsonAsync(input.Request)
-                .ReceiveJson<Order>()
+                .ReceiveJson<CreateOrderRequestResult>()
                 .ConfigureAwait(false);
         }
 
@@ -30,10 +30,10 @@ namespace Emcredit.Empay
             var client = new HttpClient();
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                Address = input.ApiEndpoint.TokenEndpoint,
-                ClientId = input.ApiEndpoint.ClientId,
-                ClientSecret = input.ApiEndpoint.ClientSecret,
-                Scope = string.IsNullOrWhiteSpace(input.Scope) ? input.ApiEndpoint.Scope : input.Scope
+                Address = input.EmpaySettings.TokenEndpointUrl,
+                ClientId = input.EmpaySettings.ClientId,
+                ClientSecret = input.EmpaySettings.ClientSecret,
+                Scope = string.IsNullOrWhiteSpace(input.Scope) ? input.EmpaySettings.Scope : input.Scope
             });
 
             if (tokenResponse.IsError)

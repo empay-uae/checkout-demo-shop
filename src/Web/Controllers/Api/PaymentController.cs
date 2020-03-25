@@ -41,30 +41,53 @@ namespace Web.Controllers.Api
             {
                 await SetBasketModelAsync();
 
-                var orderRequest = new OrderRequest()
+                // GET Empay configuration from appsettings.json
+                var empaySettings = new EmpaySettings();
+                _config.Bind("Empay", empaySettings);
+
+                var orderRequest = new OrderRequest();
+                var purchaseUnit = new OrderRequestPurchaseUnit
                 {
-                    Payee = new OrderRequestPayee
+                    Description = "eShop items",
+                    Amount = new AmountWithBreakdown
                     {
-                        BillerId = "123456",
-                        DisplayName = "eShop"
-                    }
+                        CurrencyCode = "AED",
+                        Value = BasketModel.Total().ToString(),
+                        Breakdown = new AmountBreakdown
+                        {
+                            ItemTotal = new Money
+                            {
+                                CurrencyCode = "AED",
+                                Value = BasketModel.Total().ToString(),
+                            }
+                        },
+                    },
+                    Payee = new OrderRequestPurchaseUnitPayee { BillerId = empaySettings.BillerId },
                 };
 
-                orderRequest.PurchaseUnits.Add(new OrderRequestPurchaseUnit
+                foreach (var item in BasketModel.Items)
                 {
-                    CustomId = "123456",
-                    InvoiceId = "123456",
-                    Amount = new AmountWithBreakdown { CurrencyCode = "AED", Value = BasketModel.Total().ToString() }
-                });
+                    purchaseUnit.Items.Add(new OrderRequestPurchaseUnitItem
+                    {
+                        Name = item.ProductName,
+                        UnitAmount = new Money
+                        {
+                            CurrencyCode = "AED",
+                            Value = item.UnitPrice.ToString()
+                        },
+                        Quantity = item.Quantity,
+                    });
+                }
 
-                // GET Empay API configuration from appsettings.json
-                var empayApiEndpoint = new ApiEndpoint();
-                _config.Bind("Empay", empayApiEndpoint);
+                orderRequest.PurchaseUnits.Add(purchaseUnit);
 
                 var orderService = new Emcredit.Empay.OrdersService();
 
-                var result = await orderService.CreateOrderAsync(new CreateOrderInput { Request = orderRequest, EmpayApiEndpoint = empayApiEndpoint })
-                    .ConfigureAwait(false);
+                var result = await orderService.CreateOrderAsync(new CreateOrderInput
+                {
+                    Request = orderRequest,
+                    EmpaySettings = empaySettings
+                }).ConfigureAwait(false);
 
                 return Ok(result);
             }
