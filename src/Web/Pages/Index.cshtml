@@ -3,11 +3,30 @@
     ViewData["Title"] = "Catalog";
     @model IndexModel
 }
+
+@if (Model.CatalogModel.Ads == null)
+{
 <section class="esh-catalog-hero">
     <div class="container">
         <img class="esh-catalog-title" src="~/images/main_banner_text.png" />
     </div>
 </section>
+}
+else
+{
+<section class="esh-catalog-ads">
+    <div class="carousel">
+        @foreach (var item in Model.CatalogModel.Ads)
+            {
+        <a href="@item.click_url" target="_blank">
+            <img class="" src="@item.banners[0].link" />
+        </a>
+            }
+    </div>
+</section>
+
+}
+
 <section class="esh-catalog-filters">
     <div class="container">
         <form method="get">
@@ -24,22 +43,34 @@
 <div class="container">
     @if (Model.CatalogModel.CatalogItems.Any())
     {
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+    <partial name="_pagination" for="CatalogModel.PaginationInfo" />
 
-        <div class="esh-catalog-items row">
-            @foreach (var catalogItem in Model.CatalogModel.CatalogItems)
+    <div class="esh-catalog-items row">
+        @foreach (var catalogItem in Model.CatalogModel.CatalogItems)
             {
-                <div class="esh-catalog-item col-md-4">
-                    <partial name="_product" for="@catalogItem" />
-                </div>
-            }
+        <div class="esh-catalog-item col-md-4">
+            <partial name="_product" for="@catalogItem" />
         </div>
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+            }
+    </div>
+    <partial name="_pagination" for="CatalogModel.PaginationInfo" />
     }
     else
     {
-        <div class="esh-catalog-items row">
-            THERE ARE NO RESULTS THAT MATCH YOUR SEARCH
-        </div>
+    <div class="esh-catalog-items row">
+        THERE ARE NO RESULTS THAT MATCH YOUR SEARCH
+    </div>
     }
 </div>
+@section scripts {
+    <script type="text/javascript">
+
+        $(".carousel").slick({
+            autoplay: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+
+        });
+    </script>
+}
