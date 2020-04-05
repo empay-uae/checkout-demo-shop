@@ -2,6 +2,6 @@
 {
     public static class AppPermissions
     {
-        public const string Orders_Create = "orders:create";
+        public const string OrdersWrite = "orders:write";
     }
 }

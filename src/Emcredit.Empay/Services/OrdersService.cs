@@ -18,7 +18,7 @@ namespace Emcredit.Empay
                 .WithOAuthBearerToken(await GetApiAccessTokenAsync(new GetApiAccessTokenInput
                 {
                     EmpaySettings = input.EmpaySettings,
-                    Scope = AppPermissions.Orders_Create
+                    Scope = AppPermissions.OrdersWrite
                 }).ConfigureAwait(false))
                 .PostJsonAsync(input.Request)
                 .ReceiveJson<CreateOrderRequestResult>()
