@@ -33,7 +33,7 @@ namespace Web.Controllers.Api
 
         public BasketViewModel BasketModel { get; set; } = new BasketViewModel();
 
-        [Route("create-empay-order")]
+        [Route("")]
         [HttpPost]
         public async Task<IActionResult> CreateEmpayOrderAsync()
         {
@@ -48,7 +48,9 @@ namespace Web.Controllers.Api
                 var orderRequest = new OrderRequest();
                 var purchaseUnit = new OrderRequestPurchaseUnit
                 {
-                    Description = "eShop items",
+                    CustomId = BasketModel.Id.ToString(),
+                    Description = "eShop purchase",
+                    InvoiceId = BasketModel.Id.ToString(),
                     Amount = new AmountWithBreakdown
                     {
                         CurrencyCode = "AED",
@@ -75,7 +77,7 @@ namespace Web.Controllers.Api
                             CurrencyCode = "AED",
                             Value = item.UnitPrice.ToString()
                         },
-                        Quantity = item.Quantity,
+                        Quantity = item.Quantity
                     });
                 }
 

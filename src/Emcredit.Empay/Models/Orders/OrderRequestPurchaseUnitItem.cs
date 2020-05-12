@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Emcredit.Empay.Models.Orders
 {
     public class OrderRequestPurchaseUnitItem
     {
-        public string Category { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
 
         [MaxLength(127)]
         public string Description { get; set; }
@@ -17,11 +15,8 @@ namespace Emcredit.Empay.Models.Orders
         public string Name { get; set; }
 
         [Required]
-        [Range(1, double.MaxValue)]
+        [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
-
-        [MaxLength(127)]
-        public string Sku { get; set; }
 
         public Money Tax { get; set; }
 
