@@ -13,135 +13,135 @@
 
     @if (Model.BasketModel.Items.Any())
     {
-    <form method="post">
-        <article class="esh-basket-titles row">
-            <br />
-            <section class="esh-basket-title col-xs-3">Product</section>
-            <section class="esh-basket-title col-xs-3 hidden-lg-down"></section>
-            <section class="esh-basket-title col-xs-2">Price</section>
-            <section class="esh-basket-title col-xs-2">Quantity</section>
-            <section class="esh-basket-title col-xs-2">Cost</section>
-        </article>
-        <div class="esh-catalog-items row">
-            @for (int i = 0; i < Model.BasketModel.Items.Count; i++)
+        <form method="post">
+            <article class="esh-basket-titles row">
+                <br />
+                <section class="esh-basket-title col-xs-3">Product</section>
+                <section class="esh-basket-title col-xs-3 hidden-lg-down"></section>
+                <section class="esh-basket-title col-xs-2">Price</section>
+                <section class="esh-basket-title col-xs-2">Quantity</section>
+                <section class="esh-basket-title col-xs-2">Cost</section>
+            </article>
+            <div class="esh-catalog-items row">
+                @for (int i = 0; i < Model.BasketModel.Items.Count; i++)
                 {
                     var item = Model.BasketModel.Items[i];
-            <article class="esh-basket-items row">
-                <div>
-                    <section class="esh-basket-item esh-basket-item--middle col-lg-3 hidden-lg-down">
-                        <img class="esh-basket-image" src="@Url.Content($"~{@item.PictureUrl}")" />
-                    </section>
-                    <section class="esh-basket-item esh-basket-item--middle col-xs-3">@item.ProductName</section>
-                    <section class="esh-basket-item esh-basket-item--middle col-xs-2">AED @item.UnitPrice.ToString("N2")</section>
-                    <section class="esh-basket-item esh-basket-item--middle col-xs-2">
-                        <input type="hidden" name="@(" Items[" + i + "].Key" )" value="@item.Id" />
-                        <input type="number" class="esh-basket-input" min="1" name="@(" Items[" + i + "].Value" )" value="@item.Quantity" readonly />
-                    </section>
-                    <section class="esh-basket-item esh-basket-item--middle esh-basket-item--mark col-xs-2">AED @Math.Round(item.Quantity * item.UnitPrice, 2).ToString("N2")</section>
-                </div>
-                <div class="row">
-                </div>
-            </article>
-            @*<div class="esh-catalog-item col-md-4">
-                    @item.ProductId
-                </div>*@
+                    <article class="esh-basket-items row">
+                        <div>
+                            <section class="esh-basket-item esh-basket-item--middle col-lg-3 hidden-lg-down">
+                                <img class="esh-basket-image" src="@Url.Content($"~{@item.PictureUrl}")" />
+                            </section>
+                            <section class="esh-basket-item esh-basket-item--middle col-xs-3">@item.ProductName</section>
+                            <section class="esh-basket-item esh-basket-item--middle col-xs-2">AED @item.UnitPrice.ToString("N2")</section>
+                            <section class="esh-basket-item esh-basket-item--middle col-xs-2">
+                                <input type="hidden" name="@(" Items[" + i + "].Key" )" value="@item.Id" />
+                                <input type="number" class="esh-basket-input" min="1" name="@(" Items[" + i + "].Value" )" value="@item.Quantity" readonly />
+                            </section>
+                            <section class="esh-basket-item esh-basket-item--middle esh-basket-item--mark col-xs-2">AED @Math.Round(item.Quantity * item.UnitPrice, 2).ToString("N2")</section>
+                        </div>
+                        <div class="row">
+                        </div>
+                    </article>
+                    @*<div class="esh-catalog-item col-md-4">
+                            @item.ProductId
+                        </div>*@
 
                 }
 
-            <div class="container">
-                <article class="esh-basket-titles esh-basket-titles--clean row">
-                    <section class="esh-basket-title col-xs-10"></section>
-                    <section class="esh-basket-title col-xs-2">Total</section>
-                </article>
+                <div class="container">
+                    <article class="esh-basket-titles esh-basket-titles--clean row">
+                        <section class="esh-basket-title col-xs-10"></section>
+                        <section class="esh-basket-title col-xs-2">Total</section>
+                    </article>
 
-                <article class="esh-basket-items row">
-                    <section class="esh-basket-item col-xs-10"></section>
-                    <section class="esh-basket-item esh-basket-item--mark col-xs-2">AED @Model.BasketModel.Total().ToString("N2")</section>
-                </article>
+                    <article class="esh-basket-items row">
+                        <section class="esh-basket-item col-xs-10"></section>
+                        <section class="esh-basket-item esh-basket-item--mark col-xs-2">AED @Model.BasketModel.Total().ToString("N2")</section>
+                    </article>
 
-                <article class="esh-basket-items row">
-                    <section class="esh-basket-item col-xs-7"></section>
-                    <section class="esh-basket-item col-xs-2">
-                        @*<button class="btn esh-basket-checkout" name="name" value="" type="submit">[ Update ]</button>*@
-                    </section>
-                </article>
-            </div>
+                    <article class="esh-basket-items row">
+                        <section class="esh-basket-item col-xs-7"></section>
+                        <section class="esh-basket-item col-xs-2">
+                            @*<button class="btn esh-basket-checkout" name="name" value="" type="submit">[ Update ]</button>*@
+                        </section>
+                    </article>
+                </div>
 
-            <section class="esh-basket-item col-push-6 col-6" style="display: flex">
-                <!-- empay checkout integration- starts -->
-                <div id="empay-button" style="width: 100%"></div>
+                <section class="esh-basket-item col-push-6 col-6" style="display: flex">
+                    <!-- empay checkout integration- starts -->
+                    <div id="empay-button" style="width: 100%"></div>
 
-                @* Polyfills for fetch *@
-                <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+                    @* Polyfills for fetch *@
+                    <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
 
-                @* DEV *@
-                @*<script src="http://localhost:1337/dist/empay.dev.js?client-id=em"></script>*@
+                    @* DEV *@
+                    @*<script src="http://localhost:1337/dist/empay.dev.js?client-id=em"></script>*@
 
-                @* SANDBOX *@
-                <script src="https://developer.empay.ae/sdk/empay.js?client-id=em"></script>
+                    @* LIVE *@
+                    <script src="https://developer.empay.ae/sdk/empay.js?client-id=em"></script>
 
-                <script>
-                    var header;
-                    // DEVELOPMENT
-                    //var baseUrl = "/";
+                    <script>
+                        var header;
+                        // DEVELOPMENT
+                        //var baseUrl = "/";
 
-                    // Sandbox
-                    var baseUrl = "/checkout/shop/";
+                        // Sandbox
+                        var baseUrl = "/checkout/shop/";
 
-                    function handleErrors(response) {
-                        if (!response.ok) {
-                            throw Error(response.statusText);
+                        function handleErrors(response) {
+                            if (!response.ok) {
+                                throw Error(response.statusText);
+                            }
+                            return response;
                         }
-                        return response;
-                    }
 
-                    empay
-                        .Buttons({
+                        empay
+                            .Buttons({
 
-                            createOrder: function (data, actions) {
-                                return fetch(baseUrl + 'api/demopayment/create-empay-order', {
-                                    method: 'post',
-                                    headers: {
-                                        'content-type': 'application/json'
+                                createOrder: function (data, actions) {
+                                    return fetch(baseUrl + 'api/demopayment', {
+                                        method: 'post',
+                                        headers: {
+                                            'content-type': 'application/json'
+                                        }
+                                    })
+                                        .then(handleErrors)
+                                        .then(function (res) {
+                                            console.log(res);
+                                            return res.json();
+                                        }).then(function (data) {
+                                            return data.id;
+                                        }).catch(function (error) {
+                                            console.log(error);
+                                        });;
+
+                                },
+                                onApprove: function (data, actions) {
+                                    console.log("onApprove", data);
+
+                                    if (data.status === "COMPLETED") {
+                                        // Show a success message to your buyer
+                                        window.location.href = baseUrl + 'Basket/success?ApprovalCode=' + data.id
+
                                     }
-                                })
-                                    .then(handleErrors)
-                                    .then(function (res) {
-                                        console.log(res);
-                                        return res.json();
-                                    }).then(function (data) {
-                                        return data.id;
-                                    }).catch(function (error) {
-                                        console.log(error);
-                                    });;
 
-                            },
-                            onApprove: function (data, actions) {
-                                console.log("onApprove", data);
-
-                                if (data.status === "COMPLETED") {
-                                    // Show a success message to your buyer
-                                    window.location.href = baseUrl + 'Basket/success?ApprovalCode=' + data.id
-
-                                }
-
-                            },
-                            // TODO: Toggle based on environment
-                            env: "test"
-                            //env: "sandbox"
-                        })
-                        .render("#empay-button");
-                </script>
-                <!-- empay checkout integration- ends -->
-            </section>
-        </div>
-    </form>
+                                },
+                                // TODO: Toggle based on environment
+                                env: "test"
+                                //env: "sandbox"
+                            })
+                            .render("#empay-button");
+                    </script>
+                    <!-- empay checkout integration- ends -->
+                </section>
+            </div>
+        </form>
     }
     else
     {
-    <div class="esh-catalog-items row">
-        Basket is empty.
-    </div>
+        <div class="esh-catalog-items row">
+            Basket is empty.
+        </div>
     }
 </div>
